@@ -1,0 +1,396 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 8
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -592,
+        -112
+      ],
+      "id": "01ce992b-b9cd-476c-8e56-750cc21ef582",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "url": "https://export.arxiv.org/api/query?search_query=all:(\"large language model\" OR \"Agents\")&start=0&max_results=5&sortBy=submittedDate&sortOrder=descending",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -384,
+        -112
+      ],
+      "id": "7298f373-1425-4fe6-813b-8957a71fa4da",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.xml",
+      "typeVersion": 1,
+      "position": [
+        -176,
+        -112
+      ],
+      "id": "e9c92222-27a1-4621-9066-79043465f172",
+      "name": "XML"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Esperamos estructura tipo: { feed: { entry: [...] } }\nconst feed = $json.feed ?? $json;\nlet entries = feed?.entry ?? [];\n\n// Asegurar array\nif (!Array.isArray(entries)) entries = [entries].filter(Boolean);\n\nfunction toArray(x) {\n  return Array.isArray(x) ? x : (x ? [x] : []);\n}\n\n// Construir items\nconst out = entries.map((e) => {\n  const id = (e.id || \"\").toString().trim(); // p.ej: https://arxiv.org/abs/2401.12345\n  const title = (e.title || \"\").toString().replace(/\\s+/g, \" \").trim();\n  const summary = (e.summary || \"\").toString().trim();\n  const published = (e.published || \"\").toString().trim();\n\n  // Autores en Atom suelen venir como entry.author = [{name:\"...\"}, ...]\n  const authors = toArray(e.author).map(a => (a?.name || \"\").toString().trim()).filter(Boolean);\n\n  // Regla PDF: reemplazar \"/abs/\" por \"/pdf/\" y añadir \".pdf\"\n  // Funciona también con IDs antiguos tipo \"astro-ph/...\" porque la ruta se mantiene.\n  let pdfUrl = id.replace(\"/abs/\", \"/pdf/\");\n  if (!pdfUrl.endsWith(\".pdf\")) pdfUrl += \".pdf\";\n\n  return {\n    json: {\n      source: \"arXiv\",\n      id,\n      title,\n      summary,\n      published,\n      authors,\n      pdf_url: pdfUrl,\n    }\n  };\n});\n\nreturn out;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        32,
+        -112
+      ],
+      "id": "d04ef106-359d-445c-94af-d30010b6d978",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "url": "={{$json.pdf_url}}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        304,
+        -112
+      ],
+      "id": "3e37faab-47ed-4ffc-832c-a0bed139a8e9",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "name": "={{$json.title}}.pdf",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1Qvtbpb3kiInIS1tgE-IcFeUcBAfNlefD",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        864,
+        -112
+      ],
+      "id": "b504772a-2db6-4fe1-ba96-571a745f3391",
+      "name": "Upload file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "INrkAz4lKEBChp8m",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "=papers",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "root",
+          "cachedResultName": "/ (Root folder)"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -384,
+        -272
+      ],
+      "id": "11c4e5ad-81e0-4fed-a391-32b3a7f9470b",
+      "name": "Create folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "INrkAz4lKEBChp8m",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "document",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-1.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-1.5-flash"
+        },
+        "text": "You are a research assistant. Produce 5–7 concise, technical bullet points in Markdown (each line starts with '-'). Focus on methods, data, metrics, results, and significance. Avoid fluff. Place the document title an the the bullets ",
+        "inputType": "binary",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        464,
+        -656
+      ],
+      "id": "4cc25bbb-5030-4580-b929-5e14d54f32ee",
+      "name": "Analyze document",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "9O75a22dnzaNS5bR",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "function pickText(j) {\n  return j?.content?.parts?.[0]?.text ??\n         j?.candidates?.[0]?.content?.parts?.[0]?.text ?? '';\n}\nfunction extractTitle(raw, fallbackTitle) {\n  if (fallbackTitle) return fallbackTitle;\n  const bold = raw.match(/^\\s*\\*\\*(.+?)\\*\\*/m);\n  if (bold) return bold[1].trim();\n  const quoted = raw.match(/\"([^\"]{3,120})\"/);\n  if (quoted) return quoted[1].trim();\n  const first = raw.split('\\n').find(l => l.trim());\n  return (first || 'Summary').replace(/^[#*\\s-]+/, '').slice(0,120).trim();\n}\nfunction toFilename(title) {\n  return (title || 'Summary')\n    .normalize('NFKD').replace(/[\\u0300-\\u036f]/g, '')\n    .replace(/[\\\\\\/:*?\"<>|]+/g, ' ')\n    .trim().slice(0,120)\n    .replace(/\\s+/g, '_') + '.md';\n}\n\nconst out = [];\nfor (const it of items) {\n  const raw = pickText(it.json);\n  const title = extractTitle(raw, it.json.title);\n\n  // normalize bullets\n  let lines = raw.split('\\n').map(s => s.trim()).filter(Boolean);\n  if (lines.length && /^\\*\\*.+\\*\\*$/.test(lines[0])) lines = lines.slice(1);\n  lines = lines.map(l => l.replace(/^[-*•]\\s+/, ''));\n  lines = lines.map(l => '- ' + l);\n\n  const md = `# ${title}\\n\\n${lines.join('\\n')}\\n`;\n  out.push({ json: { md, filename: toFilename(title) } });\n}\nreturn out;\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        672,
+        -656
+      ],
+      "id": "52175b88-faad-47c5-b46f-745207b4bb19",
+      "name": "Code in JavaScript2"
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "md",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        880,
+        -656
+      ],
+      "id": "2cd52278-9d10-4e18-a5c2-83cfe30fa77c",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "name": "=Summary",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1sEwDeihE8VCKUub7BGVRffbwV0NU6My8",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1088,
+        -656
+      ],
+      "id": "1fb6e14c-31d3-4b39-a9a7-2dedf178af7b",
+      "name": "Upload file1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "INrkAz4lKEBChp8m",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "operation": "share",
+        "folderNoRootId": {
+          "__rl": true,
+          "value": "=1SJZEjQaNLMpRlo8PNXufoJtLcfzF0URz",
+          "mode": "id"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "reader",
+            "type": "group",
+            "emailAddress": "juandmarin22@gmail.com"
+          }
+        },
+        "options": {
+          "emailMessage": "Data updated",
+          "sendNotificationEmail": true
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1296,
+        -656
+      ],
+      "id": "644b4725-b53c-4fa2-a30e-358aaa1e79f5",
+      "name": "Share folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "INrkAz4lKEBChp8m",
+          "name": "Google Drive account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "XML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "XML": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Analyze document",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze document": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript2": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Upload file1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload file1": {
+      "main": [
+        [
+          {
+            "node": "Share folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Share folder": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "9d4a6f21-aa8a-4217-baee-4458469cbc2d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "da80a9b18e69b61ac4b216b3c5f81c87211dcab2df12fd70bce915166ed8b977"
+  },
+  "id": "k4JbHW5IlEFSpFbM",
+  "tags": []
+}

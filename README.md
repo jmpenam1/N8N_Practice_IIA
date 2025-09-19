@@ -30,24 +30,25 @@ El flujo está diseñado para reducir tareas manuales repetitivas, garantizar la
 ---
 
 ## 🔄 Flujo de Trabajo
-1. **⏰ Disparador temporal (Cron):** inicia el flujo a la hora programada.  
-2. **📂 Creación de carpeta en Google Drive:** organiza los documentos de la ejecución.  
-3. **📡 Consulta a arXiv:** búsqueda y descarga de artículos específicos.  
-4. **⚙️ Procesamiento inicial (JavaScript):** normalización de formato y nombres.  
-5. **🔀 División en dos ramas:**  
+1. ** Disparador basado en tiempo (Cron):** inicia el flujo a la hora programada.  
+2. ** Creación de carpeta en Google Drive:** organiza los documentos de la ejecución.  
+3. ** Consulta a arXiv:** búsqueda y descarga de artículos específicos.  
+4. ** Procesamiento inicial (JavaScript):** normalización de formato y nombres.  
+5. ** División en dos ramas:**  
    - **Almacenamiento de artículos** en la carpeta de Google Drive.  
    - **Procesamiento con LLM** para generar resúmenes de cada texto.  
-6. **📝 Postprocesamiento (JavaScript):** organización de resúmenes en formato estandarizado.  
-7. **📂 Guardado de resúmenes en Drive:** en la carpeta creada en el paso 2.  
-8. **📧 Envío por correo electrónico:** distribución automática de los resúmenes a los destinatarios definidos.  
+6. ** Postprocesamiento (JavaScript):** organización de resúmenes en formato estandarizado.  
+7. ** Guardado de resúmenes en Drive:** en la carpeta creada en el paso 2.  
+8. ** Envío por correo electrónico:** distribución automática de los resúmenes a los destinatarios definidos.  
 
 ---
 
 ## 📊 Beneficios clave
-- ⏱️ Reducción de horas de trabajo manual.  
-- 🗂️ Organización consistente y trazable en Google Drive.  
-- 📩 Distribución inmediata de resultados procesados.  
-- 🔧 Fácil mantenimiento y escalabilidad del flujo.  
+-  Reducción de horas de trabajo manual.  
+-  Organización consistente y trazable en Google Drive.  
+-  Distribución inmediata de resultados procesados.  
+-  Fácil mantenimiento y escalabilidad del flujo.  
+
 
 
 

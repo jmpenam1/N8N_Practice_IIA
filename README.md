@@ -2,7 +2,7 @@
 Ejercicio de clase planteado como 3er trabajo de la asignatura Introducción a la IA de la maestria de ciencia de datos y analitica en EAFIT
 Ejercicio desarrollado por Juan David Marin y Juan Manuel Peña 
 
-# 📂🤖 Automatización de Descarga, Resumen y Distribución de Artículos de arXiv con n8n
+# 📂 Automatización de Descarga, Resumen y Distribución de Artículos de arXiv con n8n
 
 ## 🚀 Descripción del Proyecto
 Este proyecto implementa un **agente automatizado en n8n** que realiza la búsqueda, descarga, organización, resumen y distribución (via correo) de artículos académicos provenientes de **arXiv**.  
@@ -20,14 +20,13 @@ El flujo está diseñado para reducir tareas manuales repetitivas, garantizar la
 ---
 
 ## 🛠️ ¿Por qué n8n?
-- **Orquestación visual y modular**: permite encadenar tareas (cron → API arXiv → Google Drive → LLM → Email) de forma clara y auditable.  
-- **Integraciones listas + personalización**: conectores nativos (Drive, Gmail, HTTP) combinados con bloques de **JavaScript** y nodos **LLM**.  
-- **Automatización basada en tiempo**: ejecución programada con disparadores tipo cron, sin depender de servidores externos.  
-- **Gestión segura de credenciales**: almacenamiento centralizado de llaves y accesos (Google, arXiv, proveedor LLM).  
+- **Ecosistema visual y modular**: permite encadenar tareas (cron → API arXiv → Google Drive → LLM → Email) de forma clara y explicable sin necesidad de código avanzado.  
+- **Integraciones listas + personalización**: cuenta con conectores dentro de la misma plataforma (Drive, Gmail, HTTP) combinados con bloques de código de preferencia del usuario, pero puede realizarse bastantte trabajo sin necesidad de escribir código.  
+- **Automatización basada en disparadores**: ejecución programada con disparadores que pueden ser basadas en tiempo o sucesos especificos.  
+- **Gestión segura de credenciales**: almacenamiento centralizado de llaves y accesos.  
 - **Resiliencia operativa**: manejo de errores, reintentos automáticos y logs por nodo.  
-- **Escalabilidad y costo eficiente**: auto-hosteable, flexible y más económico que SaaS cerrados.  
-- **Extensibilidad futura**: sencillo de expandir para añadir nuevas fuentes (PubMed, CrossRef), otros formatos de salida (Slack, Notion) o diferentes modelos LLM.  
-
+- **Escalabilidad y costo eficiente**: auto-hosteable, flexible y más económico que SaaS cerrados, el costo realmente va a depender de la tarea especifica y no de la herrmaienta a usar, por lo tanto es más viable para proyectos que usen pocas API´s  
+- **Extensibilidad futura**: se puede cambiar las fuentes de descarga de los archivos académicos como también del servicio en que se almacene dicha información obtenida.
 ---
 
 ## 🔄 Flujo de Trabajo

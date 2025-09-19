@@ -49,13 +49,13 @@ Finalmente, destaca por su escalabilidad y costo eficiente, el costo real se aju
 -  Fácil mantenimiento y escalabilidad del flujo.  
 
 
-##  Guía de Uso (My workflow.json)
+#  Guía de Uso (My workflow.json)
 
 Esta guía te explica cómo poner a funcionar el flujo `My workflow.json` en n8n para descargar artículos de arXiv, guardarlos en Google Drive, generar resúmenes con **Gemini**, y compartirlos automáticamente por correo.
 
 ---
 
-#  Requisitos previos
+##  Requisitos previos
 
 1. **Instalar n8n**  
    - Opción rápida: Usar n8n desktop o desde la web.  
@@ -68,9 +68,9 @@ Esta guía te explica cómo poner a funcionar el flujo `My workflow.json` en n8n
 3. **Haber descargado previamente el archivo de workflow adjunto en el repo 'My workflow.json'**.  
 
 ---
-## Disclaimer: Toda esta guia está pensada para la versión web de n8n.
+# Disclaimer: Toda esta guia está pensada para la versión web de n8n.
 
-# Configuración inicial
+## Configuración inicial
 
 1. **Configurar credenciales**  
    - En el menú superior del proyecto dentro de n8n en la pestaña de tu proyecto → *Credentials*.  
@@ -110,14 +110,14 @@ Esta guía te explica cómo poner a funcionar el flujo `My workflow.json` en n8n
 
 ---
 
-#  Ejecución
+##  Ejecución
 
 - **Automática:** se ejecuta cada día a las **08:00 AM**.  
 - **Manual:** abre el flujo en n8n y haz clic en **Execute Workflow**.  
 
 ---
 
-#  Resultados esperados
+##  Resultados esperados
 
 1. Se crea una carpeta `papers` en Google Drive con los **PDFs de arXiv**.  
 2. Se crea una carpeta `Summary` con los **resúmenes en formato Markdown** generados por Gemini.  
@@ -125,15 +125,10 @@ Esta guía te explica cómo poner a funcionar el flujo `My workflow.json` en n8n
 
 ---
 
-#  Posibles problemas 
+##  Posibles problemas 
 
 - **No se crea la carpeta en Drive** → revisa las credenciales de Google Drive.  
 - **No se generan resúmenes** → confirma que la API Key de Gemini esté activa.  
 - **Resúmenes vacíos** → revisa el prompt en el nodo *Analyze document* y ajusta tokens.  
 - **No llega el correo** → revisa el nodo *Share folder* y la dirección configurada.  
 
----
-
-#  Con esto el agente estará siempre listo
-Cada día a las 08:00 AM:  
-Consulta arXiv (LLM/Agents) →  Guarda PDFs en Drive →  Resume con Gemini →  Comparte resúmenes automáticamente.

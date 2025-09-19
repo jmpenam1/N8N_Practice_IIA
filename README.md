@@ -4,7 +4,7 @@ Ejercicio desarrollado por Juan David Marin y Juan Manuel Peña
 
 # 📂 Automatización de Descarga, Resumen y Distribución de Artículos de arXiv con n8n
 
-## 🚀 Descripción del Proyecto
+##  Descripción del Proyecto
 Este proyecto implementa un **agente automatizado en n8n** que realiza la búsqueda, descarga, organización, resumen y distribución (via correo) de artículos académicos provenientes de **arXiv**.  
 El flujo está diseñado para reducir tareas manuales repetitivas, garantizar la consistencia de formatos y facilitar la adquisición de conocimiento a través de correo electrónico.
 
@@ -13,7 +13,7 @@ Consulta arXiv (LLM/Agents) →  Guarda PDFs en Drive →  Resume con Gemini →
 
 ---
 
-## 🎯 Problema que buscamos resolver
+##  Problema que buscamos resolver
 
 El proyecto nace de la necesidad de automatizar la ejecución inicial de investigación, en este caso la consulta de artículos académicos en arXiv sobre temas específicos (En este caso LLM OR AGENTS). Tradicionalmente, este proceso requiere buscar manualmente los documentos, descargarlos, organizarlos y, posteriormente, generar resúmenes para su lectura con herramientas como LM Notebook u otras IA´s generativas o Modelos de lenguaje. 
 Al implementar este flujo, se logra ahorrar tiempo y evitar errores al eliminar por completo la gestión manual. Además, se consigue centralizar la información al almacenar tanto los documentos como sus resúmenes en carpetas organizadas dentro de Google Drive, lo que facilita la trazabilidad y el acceso compartido.
@@ -21,14 +21,14 @@ Otro beneficio clave es la estandarización de los entregables, ya que los resú
 
 ---
 
-## 🛠️ ¿Por qué n8n?
+##  ¿Por qué n8n?
 
 La elección de n8n responde a su capacidad de funcionar como un ecosistema visual y modular, que permite organizar tareas complejas sin necesidad de escribir código avanzado.
 La plataforma ofrece integraciones listas con opción de personalización, ya que dispone de conectores nativos como Google Drive, Gmail y otros servicios, al tiempo que admite bloques de código cuando se requieren ajustes específicos sin limitarse a un lenguaje especifico. Esto permite equilibrar simplicidad con flexibilidad.
 Otro aspecto fundamental es la automatización basada en disparadores, que puede configurarse tanto por intervalos de tiempo como por eventos específicos. Además, n8n garantiza una gestión segura de credenciales, al centralizar llaves y accesos, y aporta resiliencia operativa gracias a su manejo de errores, reintentos automáticos y la trazabilidad mediante logs por nodo.
 Finalmente, destaca por su escalabilidad y costo eficiente, el costo real se ajusta al volumen y tipo de tareas, lo cual lo hace viable incluso en proyectos pequeños que solo consumen pocas APIs. A esto se suma su extensibilidad futura, dado que es posible modificar fácilmente las fuentes de descarga de los artículos o cambiar el servicio de almacenamiento de la información procesada.
 
-## 🔄 Flujo de Trabajo
+##  Flujo de Trabajo
 1. ** Disparador basado en tiempo (Cron):** inicia el flujo a la hora programada.  
 2. ** Creación de carpeta en Google Drive:** organiza los documentos de la ejecución.  
 3. ** Consulta a arXiv:** búsqueda y descarga de artículos específicos.  
@@ -42,14 +42,14 @@ Finalmente, destaca por su escalabilidad y costo eficiente, el costo real se aju
 
 ---
 
-## 📊 Beneficios clave
+##  Beneficios clave
 -  Reducción de horas de trabajo manual.  
 -  Organización consistente y trazable en Google Drive.  
 -  Distribución inmediata de resultados procesados.  
 -  Fácil mantenimiento y escalabilidad del flujo.  
 
 
-## 📘 Guía de Uso (My workflow.json)
+##  Guía de Uso (My workflow.json)
 
 Esta guía te explica cómo poner a funcionar el flujo `My workflow.json` en n8n para descargar artículos de arXiv, guardarlos en Google Drive, generar resúmenes con **Gemini**, y compartirlos automáticamente por correo.
 

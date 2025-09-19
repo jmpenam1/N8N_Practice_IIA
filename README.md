@@ -102,7 +102,7 @@ Esta guía te explica cómo poner a funcionar el flujo `My workflow.json` en n8n
 
    - **Carpetas en Google Drive**  
      - Los PDFs se guardan en la carpeta `papers`.  
-     - Los resúmenes `.md` se guardan en la carpeta `Summary`.  
+     - Los resúmenes `.txt` se guardan en la carpeta `Summary`.  
 
    - **Compartir carpeta**  
      - Actualmente el flujo comparte la carpeta `Summary` con el correo que se especifique dentro del nodo.
